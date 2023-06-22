@@ -1,4 +1,4 @@
-**Artificial Intelligence  
+Artificial Intelligence  
 Dartling gunner  
 Algorithm  
 Machine Learning  
@@ -9,5 +9,5 @@ Computer Vision
 Logs  
 Deep Learning  
 OpenAI  
-Bloons Generative AI Neural Networks Large Language Models Quincy GPT **
+Bloons Generative AI Neural Networks Large Language Models Quincy GPT
 
