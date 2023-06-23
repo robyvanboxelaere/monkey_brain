@@ -30,7 +30,7 @@ def read_cash():
     img = Image.frombytes('RGB', sct_image.size, sct_image.rgb)
 
     # Save image    
-    img.save('money.png')
+    # img.save('money.png')
 
     # Convert to grayscale
     img = img.convert('L')
@@ -43,7 +43,7 @@ def read_cash():
                 pixels[i, j] = 0
 
     # Save grayscale image
-    img.save('money_converted.png')
+    # img.save('money_converted.png')
 
     # Convert to text
     cashAmount = pytesseract.image_to_string(img)
