@@ -115,15 +115,15 @@ def return_game_info():
 def loop_game_info(seconds):
     # Keep looping until round ends
     while True:
+        # Check game state
+        gameEnded = check_game_state()
+        if gameEnded:
+            break
+
         # Check round progression and cash amount
         roundEnded, cashAmount = return_game_info()
         print('Cash amount: ' + cashAmount)
         if roundEnded:
-            break
-
-        # Check game state
-        gameEnded = check_game_state()
-        if gameEnded:
             break
 
         # Wait for x seconds
