@@ -41,7 +41,8 @@ def read_cash():
     # Convert to grayscale
     img = img.convert('L')
 
-    # Make all pixels <= rgb(220, 220, 220) black
+    # Make all pixels <= 254 black
+    # Numbers are 255, so make all pixels <= 254 black to make it easier to read for model
     pixels = img.load()
     for i in range(img.size[0]):
         for j in range(img.size[1]):
