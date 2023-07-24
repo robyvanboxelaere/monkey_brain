@@ -49,6 +49,9 @@ def read_cash():
             if pixels[i, j] <= 254:
                 pixels[i, j] = 0
 
+    # Save image
+    # img.save('money.png')
+
     # Convert to text
     cashAmount = pytesseract.image_to_string(img)
 
@@ -129,5 +132,3 @@ def loop_game_info(seconds):
 
         # Wait for x seconds
         time.sleep(seconds)
-
-loop_game_info(5)
