@@ -3,6 +3,7 @@ from pyautogui import click, locateOnScreen, moveTo, scroll, sleep
 import time
 import random
 import os
+import numpy as np
 
 # Import read_cash() from functions\vision.py
 from vision import read_cash
@@ -81,11 +82,22 @@ def findMonkey(monkey):
 
     return locatedTower
 
-def selectValidMonkey():
+def selectValidMonkey(monkey = None):
     # Move mouse to menu
     scrollUpMonkeyMenu()
 
-    monkey = generateRandomValidMonkey()
+    if monkey is None:
+        # Generate random monkey
+        monkey = generateRandomValidMonkey()
+    else:
+        # Get cash amount
+        cashAmount = int(read_cash())
+
+        # If the monkey is too expensive, return
+        if monkey.price > cashAmount:
+            print("Monkey is too expensive")
+            return
+    
     locatedTower = findMonkey(monkey)
 
     # Move mouse to tower
@@ -93,32 +105,44 @@ def selectValidMonkey():
     # Click on tower
     pyautogui.click(locatedTower)
 
-    print("Putting down " + monkey.name + " at " + str(locatedTower) + " for " + str(monkey.price) + " dollars")
-
-#this function checks every pixel around coordinates x and y for specific rgb values
-#TODO: Finish functions
+    print("Putting down " + monkey.name + " for " + str(monkey.price) + " dollars")
+    
+# Check if the area is valid
+# The monkey is surrounded by red pixels (255, 0, 0) when the area is invalid
 def checkArea(x, y):
-    for i in range(0, 100):
-        for j in range(0, 100):
-            if (pyautogui.pixelMatchesColor(x + i, y + j, (255, 0, 0), tolerance=0)):
-                return False
-    print("Area is valid")
-    return True
+    # Capture the screen or a region of interest (adjust region as needed)
+    screenshot = pyautogui.screenshot(region=(x, y, 100, 100))
+    
+    # Convert the screenshot to a NumPy array for faster processing
+    screenshot_array = np.array(screenshot)
 
-def clickRandom():
-    invalidArea = True
-    while invalidArea:
-        x = random.randint(25, 1640)
-        y = random.randint(0, 1080)
-        pyautogui.moveTo(x, y)
-        if checkArea(x, y):
-            print("Clicking at: " + str(x) + ", " + str(y))
-            pyautogui.click(x, y)
-            invalidArea = False
+    # Check if any pixel in the region is red
+    if np.any((screenshot_array == [255, 0, 0]).all(axis=-1)):
+        print("Area is invalid")
+        return True
+    return False
+
+# Clicks the screen at a random location
+def placeMonkey(monkey = None, x = None, y = None):
+    selectValidMonkey(monkey)
+    if x is None or y is None:
+        invalidArea = True
+        while invalidArea:
+            x = random.randint(25, 1640)
+            y = random.randint(100, 1080)
+            pyautogui.moveTo(x, y)
+            invalidArea = checkArea(x, y)
+    else:
+        invalidArea = checkArea(x, y)
+        if invalidArea:
+            print("Area is invalid")
+            return
+
+    print("Clicking at: " + str(x) + ", " + str(y))
+    pyautogui.click(x, y)
         
-
 # Wait 3 seconds before starting
 time.sleep(3)
 pyautogui.moveTo(1450, 300)
 pyautogui.click()
-selectValidMonkey()
+placeMonkey()
